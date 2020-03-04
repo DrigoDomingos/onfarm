@@ -32,7 +32,7 @@ parser.add_option("--rot", "--rot_90", dest="rot_90", help="Augment with 90 degr
 parser.add_option("--num_epochs", type="int", dest="num_epochs", help="Number of epochs.", default=10)
 parser.add_option("--config_filename", dest="config_filename", help=
 				"Location to store all the metadata related to the training (to be used when testing).",
-				default="config.pickle")
+				default="/home/ec2-user/SageMaker/onfarm/model_trained/config.pickle")
 parser.add_option("--output_weight_path", dest="output_weight_path", help="Output path for weights.", default='/content/model_frcnn.hdf5')
 parser.add_option("--input_weight_path", dest="input_weight_path", help="Input path for weights. If not specified, will try to load default weights provided by keras.")
 
@@ -217,9 +217,13 @@ for epoch_num in range(num_epochs):
 				try:
 					selected_neg_samples = np.random.choice(neg_samples, C.num_rois - len(selected_pos_samples), replace=False).tolist()
 				except:
-					selected_neg_samples = np.random.choice(neg_samples, C.num_rois - len(selected_pos_samples), replace=True).tolist()
-
+					try:
+						selected_neg_samples = np.random.choice(neg_samples, C.num_rois - len(selected_pos_samples), replace=True).tolist()	
+					except:
+						continue
 				sel_samples = selected_pos_samples + selected_neg_samples
+                        # The neg_samples is [[1 0 ]] only, therefore there's no negative sample      
+                                                
 			else:
 				# in the extreme case where num_rois = 1, we pick a random pos or neg sample
 				selected_pos_samples = pos_samples.tolist()
