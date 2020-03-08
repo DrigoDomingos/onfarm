@@ -29,11 +29,11 @@ parser.add_option("--hf", dest="horizontal_flips", help="Augment with horizontal
 parser.add_option("--vf", dest="vertical_flips", help="Augment with vertical flips in training. (Default=false).", action="store_true", default=False)
 parser.add_option("--rot", "--rot_90", dest="rot_90", help="Augment with 90 degree rotations in training. (Default=false).",
 				  action="store_true", default=False)
-parser.add_option("--num_epochs", type="int", dest="num_epochs", help="Number of epochs.", default=10)
+parser.add_option("--num_epochs", type="int", dest="num_epochs", help="Number of epochs.", default=100)
 parser.add_option("--config_filename", dest="config_filename", help=
 				"Location to store all the metadata related to the training (to be used when testing).",
 				default="/home/ec2-user/SageMaker/onfarm/model_trained/config.pickle")
-parser.add_option("--output_weight_path", dest="output_weight_path", help="Output path for weights.", default='/content/model_frcnn.hdf5')
+parser.add_option("--output_weight_path", dest="output_weight_path", help="Output path for weights.", default='/home/ec2-user/SageMaker/onfarm/model_trained/model_frcnn.hdf5')
 parser.add_option("--input_weight_path", dest="input_weight_path", help="Input path for weights. If not specified, will try to load default weights provided by keras.")
 
 (options, args) = parser.parse_args()
@@ -151,7 +151,7 @@ epoch_length = 500
 num_epochs = int(options.num_epochs)
 iter_num = 0
 
-losses = np.zeros((epoch_length, 5))
+losses = np.zeros((epoch_length, 100))
 rpn_accuracy_rpn_monitor = []
 rpn_accuracy_for_epoch = []
 start_time = time.time()

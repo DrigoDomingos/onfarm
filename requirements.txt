@@ -3,4 +3,6 @@ Keras==2.2.0
 numpy
 opencv-python
 sklearn
-tensorflow==1.8.0
+tensorflow==1.14.0
+tensorflow-gpu==1.14.0
+

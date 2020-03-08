@@ -21,7 +21,7 @@ parser.add_option("-n", "--num_rois", type="int", dest="num_rois",
 				help="Number of ROIs per iteration. Higher means more memory use.", default=32)
 parser.add_option("--config_filename", dest="config_filename", help=
 				"Location to read the metadata related to the training (generated when training).",
-				default="config.pickle")
+				default="/home/ec2-user/SageMaker/onfarm/model_trained/config.pickle")
 parser.add_option("--network", dest="network", help="Base network to use. Supports vgg or resnet50.", default='resnet50')
 
 (options, args) = parser.parse_args()
@@ -143,7 +143,7 @@ all_imgs = []
 
 classes = {}
 
-bbox_threshold = 0.8
+bbox_threshold = 0.95
 
 visualise = True
 
@@ -165,7 +165,7 @@ for idx, img_name in enumerate(sorted(os.listdir(img_path))):
 	[Y1, Y2, F] = model_rpn.predict(X)
 	
 
-	R = roi_helpers.rpn_to_roi(Y1, Y2, C, K.image_dim_ordering(), overlap_thresh=0.7)
+	R = roi_helpers.rpn_to_roi(Y1, Y2, C, K.image_dim_ordering(), overlap_thresh=0.95)
 
 	# convert from (x1,y1,x2,y2) to (x,y,w,h)
 	R[:, 2] -= R[:, 0]
@@ -222,7 +222,7 @@ for idx, img_name in enumerate(sorted(os.listdir(img_path))):
 	for key in bboxes:
 		bbox = np.array(bboxes[key])
 
-		new_boxes, new_probs = roi_helpers.non_max_suppression_fast(bbox, np.array(probs[key]), overlap_thresh=0.5)
+		new_boxes, new_probs = roi_helpers.non_max_suppression_fast(bbox, np.array(probs[key]), overlap_thresh=0.9)
 		for jk in range(new_boxes.shape[0]):
 			(x1, y1, x2, y2) = new_boxes[jk,:]
 
@@ -244,4 +244,6 @@ for idx, img_name in enumerate(sorted(os.listdir(img_path))):
 	print(all_dets)
 	#cv2.imshow('img', img)
 	#cv2.waitKey(0)
-	cv2.imwrite('/content/{}.png'.format(idx),img)
+	cv2.imwrite('/home/ec2-user/SageMaker/onfarm/results_img/{}.jpg'.format(idx),img)
+  
+
